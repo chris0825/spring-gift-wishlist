@@ -12,8 +12,6 @@ import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 import java.util.Base64;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,12 +25,11 @@ public class CertifyUtil {
         this.memberService = memberService;
     }
 
-    public String passwordEncoding(String password) {
+    public String encodingPassword(String password) {
         return Base64.getEncoder().encodeToString(password.getBytes());
     }
 
-    public String generateToken(Member member) {
-        String email = new String(Base64.getDecoder().decode(member.getEmail()));
+    public String generateToken(String email) {
         return Jwts.builder()
             .setSubject(email)
             .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
