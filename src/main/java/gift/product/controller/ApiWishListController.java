@@ -39,12 +39,9 @@ public class ApiWishListController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<WishProduct2>> showProductList(HttpServletRequest request, @RequestBody Map<String, Long> requestBody) {
+    public ResponseEntity<List<WishProduct2>> showProductList(HttpServletRequest request) {
         System.out.println("[ApiWishListController] showProductList()");
-
-        String token = certifyUtil.checkAuthorization(request.getHeader("Authorization"));
-
-        List<WishProduct2> productList = new ArrayList<>(wishListService.getAllProducts(certifyUtil.getEmailByToken(token)));
+        List<WishProduct2> productList = new ArrayList<>(wishListService.getAllProducts(request));
         return ResponseEntity.ok(productList);
     }
 
