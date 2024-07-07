@@ -27,9 +27,8 @@ public class CertifyUtil {
         this.memberService = memberService;
     }
 
-    public Member encryption(String email, String password) {
-        return new Member(Base64.getEncoder().encodeToString(email.getBytes()),
-            Base64.getEncoder().encodeToString(password.getBytes()), 0);
+    public String passwordEncoding(String password) {
+        return Base64.getEncoder().encodeToString(password.getBytes());
     }
 
     public String generateToken(Member member) {

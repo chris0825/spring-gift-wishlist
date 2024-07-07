@@ -37,7 +37,7 @@ public class ApiMemberController {
     public ResponseEntity<Map<String, String>> signUp(@RequestBody Map<String, String> request) {
         System.out.println("[ApiMemberController] signUp()");
 
-        Member member = certifyUtil.encryption(request.get("email"), request.get("password"));
+        Member member = new Member(request.get("email"), certifyUtil.passwordEncoding(request.get("password")), 0);
 
         memberValidation.emailDuplicateCheck(member.getEmail());
         memberService.signUp(member);
