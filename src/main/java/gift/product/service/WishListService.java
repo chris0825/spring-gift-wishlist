@@ -3,23 +3,32 @@ package gift.product.service;
 import gift.product.dao.WishListDao;
 import gift.product.model.WishProduct;
 import gift.product.util.CertifyUtil;
+import gift.product.validation.WishListValidation;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import gift.product.model.WishProduct2;
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class WishListService {
     private final WishListDao wishListDao;
     private final CertifyUtil certifyUtil;
+    private final WishListValidation wishListValidation;
+    private final AtomicLong idCounter = new AtomicLong();
 
     @Autowired
-    public WishListService(WishListDao wishListDao, CertifyUtil certifyUtil) {
+    public WishListService(WishListDao wishListDao, CertifyUtil certifyUtil, WishListValidation wishListValidation) {
         this.wishListDao = wishListDao;
         this.certifyUtil = certifyUtil;
+        this.wishListValidation = wishListValidation;
         wishListDao.createWishListTable();
     }
 
@@ -28,36 +37,47 @@ public class WishListService {
         return wishListDao.getAllProducts(certifyUtil.getEmailByToken(token));
     }
 
-    public void registerWishProduct(WishProduct wProduct) {
-        wishListDao.registerWishProduct(wProduct);
+    public ResponseEntity<String> registerWishProduct(HttpServletRequest request, Map<String, Long> requestBody) {
+        String token = certifyUtil.checkAuthorization(request.getHeader("Authorization"));
+        if(token == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid");
+
+        if(!wishListValidation.isExistsProduct(requestBody.get("productId")))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("not exists product.");
+
+        wishListDao.registerWishProduct(
+            new WishProduct(
+                idCounter.incrementAndGet(),
+                requestBody.get("productId"),
+                Math.toIntExact(requestBody.get("count")),
+                certifyUtil.getEmailByToken(token)
+            )
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body("WishProduct registered successfully");
     }
 
-    public void updateCountWishProduct(Long pId, int count, String email) {
-        wishListDao.updateCountWishProduct(pId, count, email);
+    public ResponseEntity<String> updateCountWishProduct(HttpServletRequest request, Map<String, Long> requestBody) {
+        String token = certifyUtil.checkAuthorization(request.getHeader("Authorization"));
+        if(token == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid");
+
+        if(!wishListValidation.isRegisterProduct(requestBody.get("productId"), certifyUtil.getEmailByToken(token)))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("not exists product in wishlist");
+
+        wishListDao.updateCountWishProduct(requestBody.get("productId"), Math.toIntExact(requestBody.get("count")), certifyUtil.getEmailByToken(token));
+        return ResponseEntity.status(HttpStatus.CREATED).body("update WishProduct Count successfully");
     }
 
-    public void deleteWishProduct(Long pId, String email) {
-        wishListDao.deleteWishProduct(pId, email);
+    public ResponseEntity<String> deleteWishProduct(HttpServletRequest request, Map<String, Long> requestBody) {
+        String token = certifyUtil.checkAuthorization(request.getHeader("Authorization"));
+        if(token == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid");
+
+        wishListDao.deleteWishProduct(requestBody.get("productId"), certifyUtil.getEmailByToken(token));
+        return ResponseEntity.status(HttpStatus.CREATED).body("delete WishProduct successfully");
     }
 
     public boolean existsByPId(Long pId, String email) {
         return wishListDao.existsByPId(pId, email);
-    }
-
-    @Service
-    public static class TokenService {
-        private final ConcurrentHashMap<String, String> tokenMap = new ConcurrentHashMap<>();
-
-        public void logIn(String email, String token) {
-            tokenMap.put(email, token);
-        }
-
-        public void logOut(String email) {
-            tokenMap.remove(email);
-        }
-
-        public String getToken(String email) {
-            return tokenMap.get(email);
-        }
     }
 }

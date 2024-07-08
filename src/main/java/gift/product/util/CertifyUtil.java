@@ -1,6 +1,5 @@
 package gift.product.util;
 
-import gift.product.model.Member;
 import gift.product.service.MemberService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

@@ -51,7 +51,6 @@ public class WishListDao {
     public void registerWishProduct(WishProduct wProduct) {
         System.out.println("[WishListDao] registerWishProduct()");
         var sql = "insert into wish_list (id, productId, count, memberEmail) values (?, ?, ?, ?)";
-        System.out.println(wProduct.getId()+" "+wProduct.getProductId()+" "+wProduct.getCount()+" "+wProduct.getMemberEmail());
         jdbcTemplate.update(sql, wProduct.getId(), wProduct.getProductId(), wProduct.getCount(), wProduct.getMemberEmail());
     }
 
