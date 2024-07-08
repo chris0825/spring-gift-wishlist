@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,20 +43,20 @@ public class ApiWishListController {
         return wishListService.registerWishProduct(request, requestBody);
     }
 
-    @PutMapping()
-    public ResponseEntity<String> updateCountWishProduct(HttpServletRequest request, @RequestBody Map<String, Long> requestBody) {
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateCountWishProduct(HttpServletRequest request, @RequestBody Map<String, Long> requestBody, @PathVariable Long id) {
         System.out.println("[ApiWishListController] updateCountWishProduct()");
 
         if(requestBody.get("count") == 0)
-            return deleteWishProduct(request, requestBody);
+            return deleteWishProduct(request, id);
 
-        return wishListService.updateCountWishProduct(request, requestBody);
+        return wishListService.updateCountWishProduct(request, requestBody, id);
     }
 
-    @DeleteMapping()
-    public ResponseEntity<String> deleteWishProduct(HttpServletRequest request, @RequestBody Map<String, Long> requestBody) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteWishProduct(HttpServletRequest request, @PathVariable Long id) {
         System.out.println("[ApiWishListController] deleteWishProduct()");
 
-        return wishListService.deleteWishProduct(request, requestBody);
+        return wishListService.deleteWishProduct(request, id);
     }
 }

@@ -53,16 +53,16 @@ public class WishListDao {
         jdbcTemplate.update(sql, wProduct.getId(), wProduct.getProductId(), wProduct.getCount(), wProduct.getMemberEmail());
     }
 
-    public void updateCountWishProduct(Long pId, int count, String email) {
+    public void updateCountWishProduct(Long id, int count) {
         System.out.println("[WishProductDao] updateCountWishProduct()");
-        var sql = "update wish_list set count = ? where productId = ? and memberEmail = ?";
-        jdbcTemplate.update(sql, count, pId, email);
+        var sql = "update wish_list set count = ? where id = ?";
+        jdbcTemplate.update(sql, count, id);
     }
 
-    public void deleteWishProduct(long pId, String email) {
+    public void deleteWishProduct(Long id) {
         System.out.println("[WishProductDao] deleteWishProduct()");
-        var sql = "delete from wish_list where productId = ? and memberEmail = ?";
-        jdbcTemplate.update(sql, pId, email);
+        var sql = "delete from wish_list where id = ?";
+        jdbcTemplate.update(sql, id);
     }
 
     public boolean existsByPId(Long pId, String email) {
