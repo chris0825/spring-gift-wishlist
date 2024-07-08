@@ -72,7 +72,7 @@ public class WishListService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid");
 
         wishListDao.deleteWishProduct(id);
-        return ResponseEntity.status(HttpStatus.CREATED).body("delete WishProduct successfully");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("delete WishProduct successfully");
     }
 
     public boolean existsByPId(Long pId, String email) {
