@@ -1,7 +1,6 @@
 package gift.product.dao;
 
 import gift.product.model.Member;
-import gift.product.model.Product;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
