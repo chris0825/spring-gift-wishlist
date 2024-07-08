@@ -7,7 +7,6 @@ import gift.product.validation.WishListValidation;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import gift.product.model.WishProduct2;
 import java.util.concurrent.atomic.AtomicLong;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class WishListService {

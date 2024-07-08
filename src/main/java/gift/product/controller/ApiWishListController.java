@@ -2,15 +2,12 @@ package gift.product.controller;
 
 import gift.product.model.WishProduct2;
 import gift.product.service.WishListService;
-import gift.product.util.CertifyUtil;
-import gift.product.validation.WishListValidation;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,14 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiWishListController {
 
     private final WishListService wishListService;
-    private final CertifyUtil certifyUtil;
-    private final WishListValidation wishListValidation;
 
     @Autowired
-    public ApiWishListController(WishListService wishListService, CertifyUtil certifyUtil, WishListValidation wishListValidation) {
+    public ApiWishListController(WishListService wishListService) {
         this.wishListService = wishListService;
-        this.certifyUtil = certifyUtil;
-        this.wishListValidation = wishListValidation;
     }
 
     @GetMapping()

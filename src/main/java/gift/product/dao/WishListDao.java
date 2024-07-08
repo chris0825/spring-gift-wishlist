@@ -1,6 +1,5 @@
 package gift.product.dao;
 
-import gift.product.model.Product;
 import gift.product.model.WishProduct;
 import java.util.List;
 
