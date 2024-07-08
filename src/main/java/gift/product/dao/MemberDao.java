@@ -46,10 +46,10 @@ public class MemberDao {
         return count != null && count > 0;
     }
 
-    public boolean validateMember(Member member) {
+    public boolean validateMember(String email, String password) {
         System.out.println("[MemberDao] validateMember()");
         String sql = "select count(*) from member_list where email = ? and password = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, member.getEmail(), member.getPassword());
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, email, password);
         return count != null && count > 0;
     }
 
